@@ -18,6 +18,7 @@ public struct Country: Equatable {
     public let name: String
     public let code: String
     public let phoneCode: String
+    public let isoCode3: String
     public func localizedName(_ locale: Locale = Locale.current) -> String? {
         return locale.localizedString(forRegionCode: code)
     }
@@ -188,11 +189,12 @@ public class CountryPickerView: NibView {
                 
                 guard let name = countryObj["name"] as? String,
                     let code = countryObj["code"] as? String,
+                    let isoCode3 = countryObj["code3"] as? String,
                     let phoneCode = countryObj["dial_code"] as? String else {
                         continue
                 }
                 
-                let country = Country(name: name, code: code, phoneCode: phoneCode)
+                let country = Country(name: name, code: code, phoneCode: phoneCode, isoCode3: isoCode3)
                 countries.append(country)
             }
         }
@@ -220,6 +222,12 @@ extension CountryPickerView {
         }
     }
     
+    public func setCountryByISOCode3(_ code: String) {
+        if let country = countries.first(where: { $0.isoCode3 == code }) {
+            selectedCountry = country
+        }
+    }
+    
     public func getCountryByName(_ name: String) -> Country? {
         return countries.first(where: { $0.name == name })
     }
@@ -230,5 +238,9 @@ extension CountryPickerView {
     
     public func getCountryByCode(_ code: String) -> Country? {
         return countries.first(where: { $0.code == code })
+    }
+    
+    public func getCountryByISOCode3(_ code: String) -> Country? {
+        return countries.first(where: { $0.isoCode3 == code })
     }
 }
